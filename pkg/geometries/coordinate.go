@@ -13,10 +13,6 @@ const (
 	DDD
 )
 
-func equalsWithTolerance(v1, v2, tolerance float64) bool {
-	return math.Abs(v1-v2) <= tolerance
-}
-
 type Coordinate struct {
 	x         float64
 	y         float64
@@ -44,9 +40,10 @@ func NewCoordinateFromXYZ(x, y, z float64) *Coordinate {
 
 func NewCoordinateFromCoordinate(c *Coordinate) *Coordinate {
 	return &Coordinate{
-		x: c.x,
-		y: c.y,
-		z: c.z,
+		x:         c.x,
+		y:         c.y,
+		z:         c.z,
+		dimension: c.dimension,
 	}
 }
 
@@ -61,20 +58,25 @@ func (c *Coordinate) GetCoordinate() []float64 {
 func (c *Coordinate) SetCoordinateValue(value *Coordinate) {
 	c.x = value.x
 	c.y = value.y
+	c.z = value.z
+	c.dimension = value.dimension
 }
 
 func (c *Coordinate) Equals2D(other *Coordinate) bool {
 	return c.x == other.x && c.y == other.y
 }
 
+func equals2DTolerance(v1, v2, tolerance float64) bool {
+	if v1 < v2 {
+		return v2-v1 <= tolerance
+	}
+	return v1-v2 <= tolerance
+}
+
 func (c *Coordinate) Equals2DTolerance(other *Coordinate, tolerance float64) bool {
-	if !equalsWithTolerance(c.x, other.x, tolerance) {
-		return false
-	}
-	if !equalsWithTolerance(c.y, other.y, tolerance) {
-		return false
-	}
-	return true
+	equalX := equals2DTolerance(c.x, other.x, tolerance)
+	equalY := equals2DTolerance(c.y, other.y, tolerance)
+	return equalX && equalY
 }
 
 func (c *Coordinate) EqualsCoordinate(other *Coordinate) bool {
@@ -82,10 +84,6 @@ func (c *Coordinate) EqualsCoordinate(other *Coordinate) bool {
 }
 
 func (c *Coordinate) CompareToCoordinate(other *Coordinate) int {
-	if other == nil {
-		panic("Coordinate.CompareToCoordinate => other is null")
-	}
-
 	if c.x < other.x {
 		return -1
 	}
@@ -139,10 +137,10 @@ func (c *Coordinate) ToString() string {
 	buf := bytes.NewBuffer([]byte{})
 	buf.WriteString("(")
 	buf.WriteString(strconv.FormatFloat(c.x, 'f', -1, 64))
-	buf.WriteString(",")
+	buf.WriteString(", ")
 	buf.WriteString(strconv.FormatFloat(c.y, 'f', -1, 64))
 	if c.dimension == DDD {
-		buf.WriteString(",")
+		buf.WriteString(", ")
 		buf.WriteString(strconv.FormatFloat(c.z, 'f', -1, 64))
 	}
 	buf.WriteString(")")

@@ -7,7 +7,7 @@ type Point struct {
 
 func NewPointFromLatLong(latitude, longitude, altitude float64) *Point {
 	return &Point{
-		coordinate: NewCoordinateFromXYZ(longitude, latitude, altitude),
+		coordinate: NewCoordinateFromXYZ(latitude, longitude, altitude),
 		srid:       4326,
 	}
 }
