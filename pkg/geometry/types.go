@@ -1,4 +1,4 @@
-package geometries
+package geometry
 
 type GeometryType string
 

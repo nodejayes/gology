@@ -1,4 +1,4 @@
-package geometries
+package geometry
 
 import (
 	"github.com/onsi/gomega"
@@ -180,8 +180,8 @@ func TestCoordinate_ToString(t *testing.T) {
 	t.Parallel()
 	g := gomega.NewGomegaWithT(t)
 	coord := NewCoordinate(1.5, 2.5, 3.5)
-	g.Expect(coord.ToString()).To(gomega.Equal("(X: 1.5, Y: 2.5, Z: 3.5)"))
+	g.Expect(coord.ToString()).To(gomega.Equal("(X: 1.5, Y: 2.5, Z: 3.5) 3D"))
 
 	coordInf := NewCoordinate(1.5, 2.5, math.Inf(-1))
-	g.Expect(coordInf.ToString()).To(gomega.Equal("(X: 1.5, Y: 2.5, Z: -Inf)"))
+	g.Expect(coordInf.ToString()).To(gomega.Equal("(X: 1.5, Y: 2.5, Z: -Inf) 2D"))
 }
