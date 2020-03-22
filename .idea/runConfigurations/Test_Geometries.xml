@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Test Geometries" type="GoTestRunConfiguration" factoryName="Go Test">
+    <module name="topgology" />
+    <working_directory value="$PROJECT_DIR$/pkg/geometries" />
+    <go_parameters value="-watch" />
+    <framework value="gotest" />
+    <kind value="PACKAGE" />
+    <package value="github.com/nodejayes/topgology/pkg/geometries" />
+    <method v="2" />
+  </configuration>
+</component>
