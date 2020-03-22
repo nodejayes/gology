@@ -1,12 +1,12 @@
 package geometry
 
-type GeometryType string
+type Type string
 
 const (
-	PointType      GeometryType = "Point"
-	MultiPointType              = "MultiPoint"
-	LineType                    = "LineString"
-	MultiLineType               = "MultiLineString"
-	PolygonType                 = "Polygon"
-	MultiPolygon                = "MultiPolygon"
+	PointType      Type = "Point"
+	MultiPointType      = "MultiPoint"
+	LineType            = "LineString"
+	MultiLineType       = "MultiLineString"
+	PolygonType         = "Polygon"
+	MultiPolygon        = "MultiPolygon"
 )

@@ -14,6 +14,8 @@ type ICoordinate interface {
 	SetX(float64)
 	SetY(float64)
 	SetZ(float64)
+	GetSrID() int
+	SetSrID(int)
 	GetValues() []float64
 	GetDimension() CoordinateDimension
 }
@@ -32,13 +34,14 @@ type Coordinate struct {
 	y         float64
 	z         float64
 	dimension CoordinateDimension
+	srID      int
 }
 
 // create a new Coordinate and identify the Dimension on the z value
 // if you need a 2D Coordinate you can pass mathInf(-1) or mathInf(1)
 // // coord3D := NewCoordinate(1,2,3)
 // // coord2D := NewCoordinate(1,2,math.Inf(-1))
-func NewCoordinate(x, y, z float64) *Coordinate {
+func NewCoordinate(x, y, z float64, srID int) *Coordinate {
 	d := DDD
 	if math.IsInf(z, -1) || math.IsInf(z, 1) {
 		d = DD
@@ -48,6 +51,7 @@ func NewCoordinate(x, y, z float64) *Coordinate {
 		y:         y,
 		z:         z,
 		dimension: d,
+		srID:      srID,
 	}
 }
 
@@ -83,6 +87,16 @@ func (c *Coordinate) SetZ(value float64) {
 	if math.IsInf(value, -1) || math.IsInf(value, 1) {
 		c.dimension = DD
 	}
+}
+
+// get the SrID of the Coordinate System
+func (c *Coordinate) GetSrID() int {
+	return c.srID
+}
+
+// set the SrID of the Coordinate System
+func (c *Coordinate) SetSrID(value int) {
+	c.srID = value
 }
 
 // get all 3 Dimensions in a Slice x,y,z
