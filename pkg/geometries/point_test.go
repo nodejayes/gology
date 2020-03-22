@@ -33,6 +33,12 @@ func TestPoint_GetCoordinate(t *testing.T) {
 	g.Expect(pt.GetCoordinate()).To(gomega.Equal([]float64{1.5, 2.5, 3.5}))
 }
 
+func TestPoint_GetType(t *testing.T) {
+	g := gomega.NewGomegaWithT(t)
+	pt := NewPointFromXYZ(1.5, 2.5, 3.5, 4326)
+	g.Expect(pt.GetType()).To(gomega.Equal(PointType))
+}
+
 func TestPoint_GetX(t *testing.T) {
 	g := gomega.NewGomegaWithT(t)
 	pt := NewPointFromXYZ(1.5, 2.5, 3.5, 4326)

@@ -19,6 +19,10 @@ func NewPointFromXYZ(x, y, z float64, srid int) *Point {
 	}
 }
 
+func (p *Point) GetType() GeometryType {
+	return PointType
+}
+
 func (p *Point) GetX() float64 {
 	return p.coordinate.x
 }
