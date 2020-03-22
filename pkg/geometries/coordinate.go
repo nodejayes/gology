@@ -1,15 +1,25 @@
 package geometries
 
 import (
-	"bytes"
+	"fmt"
 	"math"
-	"strconv"
 )
+
+type ICoordinate interface {
+	GetX() float64
+	GetY() float64
+	GetZ() float64
+	SetX(float64)
+	SetY(float64)
+	SetZ(float64)
+	GetValues() []float64
+	GetDimension() CoordinateDimension
+}
 
 type CoordinateDimension = int
 
 const (
-	DD CoordinateDimension = iota
+	DD CoordinateDimension = 2 << iota
 	DDD
 )
 
@@ -20,25 +30,56 @@ type Coordinate struct {
 	dimension CoordinateDimension
 }
 
-func NewCoordinateFromXY(x, y float64) *Coordinate {
-	return &Coordinate{
-		x:         x,
-		y:         y,
-		z:         0,
-		dimension: DD,
+func NewCoordinate(x, y, z float64) *Coordinate {
+	d := DDD
+	if math.IsInf(z, -1) || math.IsInf(z, 1) {
+		d = DD
 	}
-}
-
-func NewCoordinateFromXYZ(x, y, z float64) *Coordinate {
 	return &Coordinate{
 		x:         x,
 		y:         y,
 		z:         z,
-		dimension: DDD,
+		dimension: d,
 	}
 }
 
-func NewCoordinateFromCoordinate(c *Coordinate) *Coordinate {
+func (c *Coordinate) GetX() float64 {
+	return c.x
+}
+
+func (c *Coordinate) SetX(value float64) {
+	c.x = value
+}
+
+func (c *Coordinate) GetY() float64 {
+	return c.y
+}
+
+func (c *Coordinate) SetY(value float64) {
+	c.y = value
+}
+
+func (c *Coordinate) GetZ() float64 {
+	return c.z
+}
+
+func (c *Coordinate) SetZ(value float64) {
+	c.z = value
+	c.dimension = DDD
+	if math.IsInf(value, -1) || math.IsInf(value, 1) {
+		c.dimension = DD
+	}
+}
+
+func (c *Coordinate) GetValues() []float64 {
+	return []float64{c.x, c.y, c.z}
+}
+
+func (c *Coordinate) GetDimension() CoordinateDimension {
+	return c.dimension
+}
+
+func (c *Coordinate) Copy() *Coordinate {
 	return &Coordinate{
 		x:         c.x,
 		y:         c.y,
@@ -47,102 +88,73 @@ func NewCoordinateFromCoordinate(c *Coordinate) *Coordinate {
 	}
 }
 
-func (c *Coordinate) GetCoordinate() *Coordinate {
-	return c
-}
-
-func (c *Coordinate) GetCoordinateValue() []float64 {
-	return []float64{c.x, c.y, c.z}
-}
-
-func (c *Coordinate) SetCoordinateValue(value *Coordinate) {
+func (c *Coordinate) TakeOverCoordinate(value *Coordinate) {
 	c.x = value.x
 	c.y = value.y
 	c.z = value.z
 	c.dimension = value.dimension
 }
 
-func (c *Coordinate) Equals2D(other *Coordinate) bool {
-	return c.x == other.x && c.y == other.y
+func (c *Coordinate) Equals(other ICoordinate) bool {
+	return c.GetX() == other.GetX() && c.GetY() == other.GetY() && c.GetZ() == other.GetZ()
 }
 
-func equals2DTolerance(v1, v2, tolerance float64) bool {
-	if v1 < v2 {
-		return v2-v1 <= tolerance
-	}
-	return v1-v2 <= tolerance
+func (c *Coordinate) EqualsTolerance(other ICoordinate, tolerance float64) bool {
+	equalX := valueTolerance(c.GetX(), other.GetX(), tolerance)
+	equalY := valueTolerance(c.GetY(), other.GetY(), tolerance)
+	equalZ := valueTolerance(c.GetZ(), other.GetZ(), tolerance)
+	return equalX && equalY && equalZ
 }
 
-func (c *Coordinate) Equals2DTolerance(other *Coordinate, tolerance float64) bool {
-	equalX := equals2DTolerance(c.x, other.x, tolerance)
-	equalY := equals2DTolerance(c.y, other.y, tolerance)
+func (c *Coordinate) Equals2D(other ICoordinate) bool {
+	return c.GetX() == other.GetX() && c.GetY() == other.GetY()
+}
+
+func (c *Coordinate) Equals2DTolerance(other ICoordinate, tolerance float64) bool {
+	equalX := valueTolerance(c.GetX(), other.GetX(), tolerance)
+	equalY := valueTolerance(c.GetY(), other.GetY(), tolerance)
 	return equalX && equalY
 }
 
-func (c *Coordinate) EqualsCoordinate(other *Coordinate) bool {
-	return c.Equals2D(other)
-}
-
-func (c *Coordinate) CompareToCoordinate(other *Coordinate) int {
-	if c.x < other.x {
+func (c *Coordinate) CompareTo(other ICoordinate) int {
+	if c.GetX() < other.GetX() {
 		return -1
 	}
-	if c.x > other.x {
+	if c.GetX() > other.GetX() {
 		return 1
 	}
-	if c.y < other.y {
+	if c.GetY() < other.GetY() {
 		return -1
 	}
-	if c.y > other.y {
+	if c.GetY() > other.GetY() {
+		return 1
+	}
+	if c.GetZ() < other.GetZ() {
+		return -1
+	}
+	if c.GetZ() > other.GetZ() {
 		return 1
 	}
 	return 0
 }
 
-func (c *Coordinate) CompareTo(other interface{}) int {
-	switch coord := other.(type) {
-	case Coordinate:
-		return c.CompareToCoordinate(&coord)
-	case *Coordinate:
-		return c.CompareToCoordinate(coord)
-	}
-	panic("invalid type expected Coordinate or Pointer of Coordinate")
-}
-
-func (c *Coordinate) Copy() *Coordinate {
-	return NewCoordinateFromCoordinate(c)
-}
-
-func (c *Coordinate) Distance(other *Coordinate) float64 {
-	dx := c.x - other.x
-	dy := c.y - other.y
-	if c.dimension == DDD {
-		dz := c.z - other.z
+func (c *Coordinate) Distance(other ICoordinate) float64 {
+	dx := c.x - other.GetX()
+	dy := c.y - other.GetY()
+	if c.dimension == DDD && other.GetDimension() == DDD {
+		dz := c.z - other.GetZ()
 		return math.Sqrt((dx * dx) + (dy * dy) + (dz * dz))
 	}
 	return math.Sqrt(dx*dx + dy*dy)
 }
 
-func (c *Coordinate) Equals(other interface{}) bool {
-	switch coord := other.(type) {
-	case Coordinate:
-		return c.EqualsCoordinate(&coord)
-	case *Coordinate:
-		return c.EqualsCoordinate(coord)
-	}
-	return false
+func (c *Coordinate) ToString() string {
+	return fmt.Sprintf("(X: %v, Y: %v, Z: %v)", c.x, c.y, c.z)
 }
 
-func (c *Coordinate) ToString() string {
-	buf := bytes.NewBuffer([]byte{})
-	buf.WriteString("(")
-	buf.WriteString(strconv.FormatFloat(c.x, 'f', -1, 64))
-	buf.WriteString(", ")
-	buf.WriteString(strconv.FormatFloat(c.y, 'f', -1, 64))
-	if c.dimension == DDD {
-		buf.WriteString(", ")
-		buf.WriteString(strconv.FormatFloat(c.z, 'f', -1, 64))
+func valueTolerance(v1, v2, tolerance float64) bool {
+	if v1 < v2 {
+		return v2-v1 <= tolerance
 	}
-	buf.WriteString(")")
-	return buf.String()
+	return v1-v2 <= tolerance
 }

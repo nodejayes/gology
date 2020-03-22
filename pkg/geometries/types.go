@@ -1,6 +1,6 @@
 package geometries
 
-type GeometryType = string
+type GeometryType string
 
 const (
 	PointType      GeometryType = "Point"
