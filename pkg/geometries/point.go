@@ -47,6 +47,10 @@ func (p *Point) SetZ(value float64) {
 	p.coordinate.z = value
 }
 
-func (p *Point) GetCoordinate() []float64 {
+func (p *Point) GetCoordinate() *Coordinate {
 	return p.coordinate.GetCoordinate()
+}
+
+func (p *Point) GetCoordinateValue() []float64 {
+	return p.coordinate.GetCoordinateValue()
 }

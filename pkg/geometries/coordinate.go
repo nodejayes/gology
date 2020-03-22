@@ -47,11 +47,11 @@ func NewCoordinateFromCoordinate(c *Coordinate) *Coordinate {
 	}
 }
 
-func (c *Coordinate) GetCoordinateValue() *Coordinate {
+func (c *Coordinate) GetCoordinate() *Coordinate {
 	return c
 }
 
-func (c *Coordinate) GetCoordinate() []float64 {
+func (c *Coordinate) GetCoordinateValue() []float64 {
 	return []float64{c.x, c.y, c.z}
 }
 

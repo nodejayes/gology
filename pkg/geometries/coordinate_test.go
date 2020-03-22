@@ -128,19 +128,19 @@ func TestCoordinate_Equals2DTolerance(t *testing.T) {
 	g.Expect(coord3.Equals2DTolerance(coord1, 0.1)).To(gomega.BeTrue())
 }
 
-func TestCoordinate_GetCoordinate(t *testing.T) {
-	g := gomega.NewGomegaWithT(t)
-	coord := NewCoordinateFromXYZ(1.5, 2.5, 3.5)
-	g.Expect(coord.GetCoordinate()).To(gomega.Equal([]float64{1.5, 2.5, 3.5}))
-}
-
 func TestCoordinate_GetCoordinateValue(t *testing.T) {
 	g := gomega.NewGomegaWithT(t)
 	coord := NewCoordinateFromXYZ(1.5, 2.5, 3.5)
-	g.Expect(coord.GetCoordinateValue().x).To(gomega.Equal(coord.x))
-	g.Expect(coord.GetCoordinateValue().y).To(gomega.Equal(coord.y))
-	g.Expect(coord.GetCoordinateValue().z).To(gomega.Equal(coord.z))
-	g.Expect(coord.GetCoordinateValue().dimension).To(gomega.Equal(coord.dimension))
+	g.Expect(coord.GetCoordinateValue()).To(gomega.Equal([]float64{1.5, 2.5, 3.5}))
+}
+
+func TestCoordinate_GetCoordinate(t *testing.T) {
+	g := gomega.NewGomegaWithT(t)
+	coord := NewCoordinateFromXYZ(1.5, 2.5, 3.5)
+	g.Expect(coord.GetCoordinate().x).To(gomega.Equal(coord.x))
+	g.Expect(coord.GetCoordinate().y).To(gomega.Equal(coord.y))
+	g.Expect(coord.GetCoordinate().z).To(gomega.Equal(coord.z))
+	g.Expect(coord.GetCoordinate().dimension).To(gomega.Equal(coord.dimension))
 }
 
 func TestCoordinate_SetCoordinateValue(t *testing.T) {
