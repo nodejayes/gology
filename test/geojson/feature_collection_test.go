@@ -45,4 +45,34 @@ var _ = ginkgo.Describe("FeatureCollection Test", func() {
 			})
 		})
 	})
+	ginkgo.Describe("Deserialize()", func() {
+		featureCollection := geojson.DeserializeFeatureCollection(FeatureCollectionGeoJSON)
+		featureCollectionCrs := geojson.DeserializeFeatureCollection(FeatureCollectionGeoJSONCrs)
+		ginkgo.It("has Feature Type", func() {
+			gomega.Expect(featureCollection.Type).To(gomega.Equal(geojson.FeatureCollectionType))
+			gomega.Expect(featureCollectionCrs.Type).To(gomega.Equal(geojson.FeatureCollectionType))
+		})
+		ginkgo.It("has Features", func() {
+			gomega.Expect(len(featureCollection.Features)).To(gomega.Equal(1))
+			gomega.Expect(len(featureCollectionCrs.Features)).To(gomega.Equal(1))
+		})
+		ginkgo.It("has the Point as Geometry", func() {
+			gomega.Expect(featureCollection.Features[0].Geometry.IsPoint()).To(gomega.BeTrue())
+			gomega.Expect(featureCollectionCrs.Features[0].Geometry.IsPoint()).To(gomega.BeTrue())
+		})
+		ginkgo.It("has 0 as SrId", func() {
+			gomega.Expect(featureCollection.Features[0].Geometry.GetSrId()).To(gomega.Equal(0))
+		})
+		ginkgo.It("has SrId", func() {
+			gomega.Expect(featureCollectionCrs.Features[0].Geometry.GetSrId()).To(gomega.Equal(SrId))
+		})
+	})
+	ginkgo.Describe("Serialize()", func() {
+		featureCollection := geojson.DeserializeFeatureCollection(FeatureCollectionGeoJSON)
+		featureCollectionCrs := geojson.DeserializeFeatureCollection(FeatureCollectionGeoJSONCrs)
+		ginkgo.It("is Valid GeoJSON FeatureCollection", func() {
+			gomega.Expect(featureCollection.Serialize()).To(gomega.Equal(FeatureCollectionGeoJSON))
+			gomega.Expect(featureCollectionCrs.Serialize()).To(gomega.Equal(FeatureCollectionGeoJSONCrs))
+		})
+	})
 })

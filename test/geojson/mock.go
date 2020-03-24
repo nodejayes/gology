@@ -47,3 +47,8 @@ var MultiPolygonCoordinates = [][][][]float64{
 }
 var MultiPolygonGeoJSON = "{\"type\":\"MultiPolygon\",\"coordinates\":[[[[13.387693762779236,51.30805836177982],[13.388970494270325,51.30805836177982],[13.388970494270325,51.30864521599963],[13.387693762779236,51.30864521599963],[13.387693762779236,51.30805836177982]]],[[[13.386889100074768,51.30635811890035],[13.38933527469635,51.30635811890035],[13.38933527469635,51.307501681698135],[13.386889100074768,51.307501681698135],[13.386889100074768,51.30635811890035]]]]}"
 var MultiPolygonGeoJSONCrs = fmt.Sprintf("{\"type\":\"MultiPolygon\",\"coordinates\":[[[[13.387693762779236,51.30805836177982],[13.388970494270325,51.30805836177982],[13.388970494270325,51.30864521599963],[13.387693762779236,51.30864521599963],[13.387693762779236,51.30805836177982]]],[[[13.386889100074768,51.30635811890035],[13.38933527469635,51.30635811890035],[13.38933527469635,51.307501681698135],[13.386889100074768,51.307501681698135],[13.386889100074768,51.30635811890035]]]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:%v\"}}}", SrId)
+var FeatureGeoJSON = fmt.Sprintf("{\"type\":\"Feature\",\"geometry\":%v,\"properties\":{}}", PointGeoJSON)
+var FeatureGeoJSONProps = fmt.Sprintf("{\"type\":\"Feature\",\"geometry\":%v,\"properties\":{\"hello\":\"world\"}}", PointGeoJSON)
+var FeatureGeoJSONCrs = fmt.Sprintf("{\"type\":\"Feature\",\"geometry\":%v,\"properties\":{}}", PointGeoJSONCrs)
+var FeatureCollectionGeoJSON = fmt.Sprintf("{\"type\":\"FeatureCollection\",\"features\":[%v]}", FeatureGeoJSON)
+var FeatureCollectionGeoJSONCrs = fmt.Sprintf("{\"type\":\"FeatureCollection\",\"features\":[%v],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:%v\"}}}", FeatureGeoJSONCrs, SrId)

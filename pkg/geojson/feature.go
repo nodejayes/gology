@@ -1,5 +1,7 @@
 package geojson
 
+import jsoniter "github.com/json-iterator/go"
+
 type FeatureTypes string
 
 const (
@@ -27,4 +29,25 @@ func NewFeature(geometry *Geometry, properties *map[string]interface{}) *Feature
 		Geometry:   geometry,
 		Properties: properties,
 	}
+}
+
+func DeserializeFeature(input string) *Feature {
+	var res *Feature
+	err := jsoniter.Unmarshal([]byte(input), &res)
+	if err != nil {
+		return nil
+	}
+	if res.Properties == nil {
+		emptyProps := make(map[string]interface{})
+		res.Properties = &emptyProps
+	}
+	return res
+}
+
+func (f *Feature) Serialize() string {
+	stream, err := jsoniter.Marshal(f)
+	if err != nil {
+		return ""
+	}
+	return string(stream)
 }
