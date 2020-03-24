@@ -2,7 +2,7 @@ package geojson
 
 import (
 	"fmt"
-	"git.agricon.de/map-factory/pkg/geojson"
+	"github.com/nodejayes/topgology/pkg/geojson"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 )
