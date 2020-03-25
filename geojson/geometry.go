@@ -6,28 +6,34 @@ import (
 )
 
 // GeometryTypes are the Type strings for the GeoJSON Geometry Types like Point, Line Polygon and so on.
-// its there to use it with the NewGeometry constructor
 type GeometryTypes string
 
 const (
-	PointType        GeometryTypes = "Point"
-	MultiPointType   GeometryTypes = "MultiPoint"
-	LineType         GeometryTypes = "LineString"
-	MultiLineType    GeometryTypes = "MultiLineString"
-	PolygonType      GeometryTypes = "Polygon"
+	// the GeoJSON Geometry Point Type
+	PointType GeometryTypes = "Point"
+	// the GeoJSON Geometry Line Type
+	LineType GeometryTypes = "LineString"
+	// the GeoJSON Geometry Polygon Type
+	PolygonType GeometryTypes = "Polygon"
+	// the GeoJSON Geometry MultiPoint Type
+	MultiPointType GeometryTypes = "MultiPoint"
+	// the GeoJSON Geometry MultiLine Type
+	MultiLineType GeometryTypes = "MultiLineString"
+	// the GeoJSON Geometry MultiPolygon Type
 	MultiPolygonType GeometryTypes = "MultiPolygon"
 )
 
-type IGeometryConverter interface {
-	ToGeometry() *Geometry
-}
-
+// the Definition of a abstract Geometry this can be a Point, Line , Polygon or MultiPoint, MultiLine, MultiPolygon
 type Geometry struct {
-	Type        GeometryTypes    `json:"type"`
-	Coordinates interface{}      `json:"coordinates"`
-	CRS         *ReferenceSystem `json:"crs,omitempty"`
+	// the Type of the Geometry
+	Type GeometryTypes `json:"type"`
+	// the Coordinates as float64 Array with N Dimensions represented as interface{}
+	Coordinates interface{} `json:"coordinates"`
+	// a optional Coordinate System Info was removed on Serialization when is nil
+	CRS *ReferenceSystem `json:"crs,omitempty"`
 }
 
+// create a new Geometry Object with a Type Coordinates and the EPSG Code
 func NewGeometry(typ GeometryTypes, coordinates interface{}, srId int) *Geometry {
 	return &Geometry{
 		Type:        typ,
@@ -36,6 +42,7 @@ func NewGeometry(typ GeometryTypes, coordinates interface{}, srId int) *Geometry
 	}
 }
 
+// create a new Point from Coordinates and EPSG Code
 func NewPoint(coordinate []float64, srId int) (*Point, error) {
 	geom := &Geometry{
 		Type:        PointType,
@@ -45,6 +52,7 @@ func NewPoint(coordinate []float64, srId int) (*Point, error) {
 	return geom.AsPoint()
 }
 
+// create a new Line from Coordinates and EPSG Code
 func NewLine(coordinates [][]float64, srId int) (*Line, error) {
 	geom := &Geometry{
 		Type:        LineType,
@@ -54,6 +62,7 @@ func NewLine(coordinates [][]float64, srId int) (*Line, error) {
 	return geom.AsLine()
 }
 
+// create a new Polygon from Coordinates and EPSG Code
 func NewPolygon(coordinates [][][]float64, srId int) (*Polygon, error) {
 	geom := &Geometry{
 		Type:        PolygonType,
@@ -63,6 +72,7 @@ func NewPolygon(coordinates [][][]float64, srId int) (*Polygon, error) {
 	return geom.AsPolygon()
 }
 
+// create a new MultiPoint from Coordinates and EPSG Code
 func NewMultiPoint(coordinates [][]float64, srId int) (*MultiPoint, error) {
 	geom := &Geometry{
 		Type:        MultiPointType,
@@ -72,6 +82,7 @@ func NewMultiPoint(coordinates [][]float64, srId int) (*MultiPoint, error) {
 	return geom.AsMultiPoint()
 }
 
+// create a new MultiLine from Coordinates and EPSG Code
 func NewMultiLine(coordinates [][][]float64, srId int) (*MultiLine, error) {
 	geom := &Geometry{
 		Type:        MultiLineType,
@@ -81,6 +92,7 @@ func NewMultiLine(coordinates [][][]float64, srId int) (*MultiLine, error) {
 	return geom.AsMultiLine()
 }
 
+// create a new MultiPolygon from Coordinates and EPSG Code
 func NewMultiPolygon(coordinates [][][][]float64, srId int) (*MultiPolygon, error) {
 	geom := &Geometry{
 		Type:        MultiPolygonType,
@@ -90,6 +102,7 @@ func NewMultiPolygon(coordinates [][][][]float64, srId int) (*MultiPolygon, erro
 	return geom.AsMultiPolygon()
 }
 
+// try to Deserialize a string into a Geometry when the string is not a valid GeoJSON String nil was returned
 func DeserializeGeometry(str string) *Geometry {
 	var geom *Geometry
 	err := jsoniter.Unmarshal([]byte(str), &geom)
@@ -99,6 +112,7 @@ func DeserializeGeometry(str string) *Geometry {
 	return geom
 }
 
+// serialize the current Geometry into a GeoJSON String
 func (g *Geometry) Serialize() string {
 	stream, err := jsoniter.Marshal(g)
 	if err != nil {
@@ -107,6 +121,7 @@ func (g *Geometry) Serialize() string {
 	return string(stream)
 }
 
+// get the EPSG Code from the Coordinate Reference System when the Geometry has some. If not 0 was returned
 func (g *Geometry) GetSrId() int {
 	if g.CRS == nil {
 		return 0
@@ -114,6 +129,7 @@ func (g *Geometry) GetSrId() int {
 	return g.CRS.GetSrId()
 }
 
+// try to convert the abstract Geometry into a Point
 func (g *Geometry) AsPoint() (*Point, error) {
 	if g.IsPoint() {
 		switch coords := g.Coordinates.(type) {
@@ -132,6 +148,7 @@ func (g *Geometry) AsPoint() (*Point, error) {
 	return nil, errors.New("can't convert to Point")
 }
 
+// try to convert the abstract Geometry into a Line
 func (g *Geometry) AsLine() (*Line, error) {
 	if g.IsLine() {
 		switch coords := g.Coordinates.(type) {
@@ -150,6 +167,7 @@ func (g *Geometry) AsLine() (*Line, error) {
 	return nil, errors.New("can't convert to Line")
 }
 
+// try to convert the abstract Geometry into a Polygon
 func (g *Geometry) AsPolygon() (*Polygon, error) {
 	if g.IsPolygon() {
 		switch coords := g.Coordinates.(type) {
@@ -168,6 +186,7 @@ func (g *Geometry) AsPolygon() (*Polygon, error) {
 	return nil, errors.New("can't convert to Polygon")
 }
 
+// try to convert the abstract Geometry into a MultiPoint
 func (g *Geometry) AsMultiPoint() (*MultiPoint, error) {
 	if g.IsMultiPoint() {
 		switch coords := g.Coordinates.(type) {
@@ -186,6 +205,7 @@ func (g *Geometry) AsMultiPoint() (*MultiPoint, error) {
 	return nil, errors.New("can't convert to MultiPoint")
 }
 
+// try to convert the abstract Geometry into a MultiLine
 func (g *Geometry) AsMultiLine() (*MultiLine, error) {
 	if g.IsMultiLine() {
 		switch coords := g.Coordinates.(type) {
@@ -204,6 +224,7 @@ func (g *Geometry) AsMultiLine() (*MultiLine, error) {
 	return nil, errors.New("can't convert to MultiLine")
 }
 
+// try to convert the abstract Geometry into a MultiPolygon
 func (g *Geometry) AsMultiPolygon() (*MultiPolygon, error) {
 	if g.IsMultiPolygon() {
 		switch coords := g.Coordinates.(type) {
@@ -222,26 +243,32 @@ func (g *Geometry) AsMultiPolygon() (*MultiPolygon, error) {
 	return nil, errors.New("can't convert to MultiPolygon")
 }
 
+// check the current Geometry Type for the Point Type
 func (g *Geometry) IsPoint() bool {
 	return g.Type == PointType
 }
 
+// check the current Geometry Type for the Line Type
 func (g *Geometry) IsLine() bool {
 	return g.Type == LineType
 }
 
+// check the current Geometry Type for the Polygon Type
 func (g *Geometry) IsPolygon() bool {
 	return g.Type == PolygonType
 }
 
+// check the current Geometry Type for the MultiPoint Type
 func (g *Geometry) IsMultiPoint() bool {
 	return g.Type == MultiPointType
 }
 
+// check the current Geometry Type for the MultiLine Type
 func (g *Geometry) IsMultiLine() bool {
 	return g.Type == MultiLineType
 }
 
+// check the current Geometry Type for the MultiPolygon Type
 func (g *Geometry) IsMultiPolygon() bool {
 	return g.Type == MultiPolygonType
 }
