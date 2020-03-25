@@ -1,7 +1,7 @@
 package geojson
 
 import (
-	"github.com/nodejayes/topgology/pkg/geojson"
+	"github.com/nodejayes/topgology/geojson"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 )

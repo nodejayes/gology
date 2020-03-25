@@ -1,4 +1,4 @@
-module github.com/nodejayes/topgology
+module github.com/nodejayes/gology
 
 go 1.14
 

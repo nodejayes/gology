@@ -5,6 +5,8 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+// GeometryTypes are the Type strings for the GeoJSON Geometry Types like Point, Line Polygon and so on.
+// its there to use it with the NewGeometry constructor
 type GeometryTypes string
 
 const (
