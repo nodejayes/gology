@@ -1,14 +1,15 @@
 package geojson
 
 import (
-	"github.com/nodejayes/topgology/geojson"
+	"github.com/nodejayes/gology/geojson"
+	"github.com/nodejayes/gology/test"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 )
 
 var _ = ginkgo.Describe("Feature Test", func() {
 	ginkgo.Describe("NewFeature()", func() {
-		geom := geojson.NewGeometry(geojson.PointType, PointCoordinates, SrId)
+		geom := geojson.NewGeometry(geojson.PointType, test.PointCoordinates, test.SrId)
 		f := geojson.NewFeature(geom, nil)
 		ginkgo.It("has Feature Type", func() {
 			gomega.Expect(f.Type).To(gomega.Equal(geojson.FeatureType))
@@ -17,8 +18,8 @@ var _ = ginkgo.Describe("Feature Test", func() {
 			gomega.Expect(f.Geometry).NotTo(gomega.BeNil())
 			pt, err := f.Geometry.AsPoint()
 			gomega.Expect(err).To(gomega.BeNil())
-			gomega.Expect(pt.Coordinates).To(gomega.Equal(PointCoordinates))
-			gomega.Expect(pt.SrId).To(gomega.Equal(SrId))
+			gomega.Expect(pt.Coordinates).To(gomega.Equal(test.PointCoordinates))
+			gomega.Expect(pt.SrId).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Initialized Properties", func() {
 			gomega.Expect(f.Properties).NotTo(gomega.BeNil())
@@ -34,9 +35,9 @@ var _ = ginkgo.Describe("Feature Test", func() {
 		})
 	})
 	ginkgo.Describe("Deserialize()", func() {
-		feature := geojson.DeserializeFeature(FeatureGeoJSON)
-		featureCrs := geojson.DeserializeFeature(FeatureGeoJSONCrs)
-		featureWithProps := geojson.DeserializeFeature(FeatureGeoJSONProps)
+		feature := geojson.DeserializeFeature(test.FeatureGeoJSON)
+		featureCrs := geojson.DeserializeFeature(test.FeatureGeoJSONCrs)
+		featureWithProps := geojson.DeserializeFeature(test.FeatureGeoJSONProps)
 		ginkgo.It("has Feature Type", func() {
 			gomega.Expect(feature.Type).To(gomega.Equal(geojson.FeatureType))
 			gomega.Expect(featureWithProps.Type).To(gomega.Equal(geojson.FeatureType))
@@ -52,7 +53,7 @@ var _ = ginkgo.Describe("Feature Test", func() {
 			gomega.Expect(featureWithProps.Geometry.GetSrId()).To(gomega.Equal(0))
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(featureCrs.Geometry.GetSrId()).To(gomega.Equal(SrId))
+			gomega.Expect(featureCrs.Geometry.GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has empty Properties", func() {
 			gomega.Expect(len(*feature.Properties)).To(gomega.Equal(0))
@@ -64,13 +65,13 @@ var _ = ginkgo.Describe("Feature Test", func() {
 		})
 	})
 	ginkgo.Describe("Serialize()", func() {
-		feature := geojson.DeserializeFeature(FeatureGeoJSON)
-		featureCrs := geojson.DeserializeFeature(FeatureGeoJSONCrs)
-		featureWithProps := geojson.DeserializeFeature(FeatureGeoJSONProps)
+		feature := geojson.DeserializeFeature(test.FeatureGeoJSON)
+		featureCrs := geojson.DeserializeFeature(test.FeatureGeoJSONCrs)
+		featureWithProps := geojson.DeserializeFeature(test.FeatureGeoJSONProps)
 		ginkgo.It("is Valid GeoJSON Feature", func() {
-			gomega.Expect(feature.Serialize()).To(gomega.Equal(FeatureGeoJSON))
-			gomega.Expect(featureCrs.Serialize()).To(gomega.Equal(FeatureGeoJSONCrs))
-			gomega.Expect(featureWithProps.Serialize()).To(gomega.Equal(FeatureGeoJSONProps))
+			gomega.Expect(feature.Serialize()).To(gomega.Equal(test.FeatureGeoJSON))
+			gomega.Expect(featureCrs.Serialize()).To(gomega.Equal(test.FeatureGeoJSONCrs))
+			gomega.Expect(featureWithProps.Serialize()).To(gomega.Equal(test.FeatureGeoJSONProps))
 		})
 	})
 })

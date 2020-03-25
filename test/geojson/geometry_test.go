@@ -2,22 +2,23 @@ package geojson
 
 import (
 	"fmt"
-	"github.com/nodejayes/topgology/geojson"
+	"github.com/nodejayes/gology/geojson"
+	"github.com/nodejayes/gology/test"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 )
 
 var _ = ginkgo.Describe("Geometry Test", func() {
-	point := geojson.NewGeometry(geojson.PointType, PointCoordinates, SrId)
-	line := geojson.NewGeometry(geojson.LineType, LineCoordinates, SrId)
-	polygon := geojson.NewGeometry(geojson.PolygonType, PolygonCoordinates, SrId)
-	multiPoint := geojson.NewGeometry(geojson.MultiPointType, MultiPointCoordinates, SrId)
-	multiLine := geojson.NewGeometry(geojson.MultiLineType, MultiLineCoordinates, SrId)
-	multiPolygon := geojson.NewGeometry(geojson.MultiPolygonType, MultiPolygonCoordinates, SrId)
+	point := geojson.NewGeometry(geojson.PointType, test.PointCoordinates, test.SrId)
+	line := geojson.NewGeometry(geojson.LineType, test.LineCoordinates, test.SrId)
+	polygon := geojson.NewGeometry(geojson.PolygonType, test.PolygonCoordinates, test.SrId)
+	multiPoint := geojson.NewGeometry(geojson.MultiPointType, test.MultiPointCoordinates, test.SrId)
+	multiLine := geojson.NewGeometry(geojson.MultiLineType, test.MultiLineCoordinates, test.SrId)
+	multiPolygon := geojson.NewGeometry(geojson.MultiPolygonType, test.MultiPolygonCoordinates, test.SrId)
 	ginkgo.Describe("Getter", func() {
-		tmp := geojson.NewGeometry(geojson.MultiPolygonType, MultiPolygonCoordinates, SrId)
+		tmp := geojson.NewGeometry(geojson.MultiPolygonType, test.MultiPolygonCoordinates, test.SrId)
 		ginkgo.It("get the SrId", func() {
-			gomega.Expect(tmp.GetSrId()).To(gomega.Equal(SrId))
+			gomega.Expect(tmp.GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("invalid values return 0", func() {
 			tmp.CRS.Properties.Name = ""
@@ -137,15 +138,15 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 		})
 	})
 	ginkgo.Describe("NewGeometry()", func() {
-		geom := geojson.NewGeometry(geojson.PointType, PointCoordinates, SrId)
+		geom := geojson.NewGeometry(geojson.PointType, test.PointCoordinates, test.SrId)
 		ginkgo.It("has no Error", func() {
 			gomega.Expect(geom.Type).To(gomega.Equal(geojson.PointType))
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.CRS.Properties.Name).To(gomega.Equal(fmt.Sprintf("EPSG:%v", SrId)))
+			gomega.Expect(geom.CRS.Properties.Name).To(gomega.Equal(fmt.Sprintf("EPSG:%v", test.SrId)))
 		})
 		ginkgo.It("has PointCoordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(PointCoordinates))
+			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.PointCoordinates))
 		})
 	})
 	ginkgo.Describe("AsPoint()", func() {
@@ -154,10 +155,10 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(SrId))
+			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Point Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(PointCoordinates))
+			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.PointCoordinates))
 		})
 		ginkgo.Describe("can't be other Geometry", func() {
 			ginkgo.It("AsLine() has a Error", func() {
@@ -188,10 +189,10 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(SrId))
+			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Line Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(LineCoordinates))
+			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.LineCoordinates))
 		})
 		ginkgo.Describe("can't be other Geometry", func() {
 			ginkgo.It("AsPoint() has a Error", func() {
@@ -222,10 +223,10 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(SrId))
+			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Polygon Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(PolygonCoordinates))
+			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.PolygonCoordinates))
 		})
 		ginkgo.Describe("can't be other Geometry", func() {
 			ginkgo.It("AsPoint() has a Error", func() {
@@ -256,10 +257,10 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(SrId))
+			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has MultiPoint Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(MultiPointCoordinates))
+			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.MultiPointCoordinates))
 		})
 		ginkgo.Describe("can't be other Geometry", func() {
 			ginkgo.It("AsPoint() has a Error", func() {
@@ -290,10 +291,10 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(SrId))
+			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has MultiLine Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(MultiLineCoordinates))
+			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.MultiLineCoordinates))
 		})
 		ginkgo.Describe("can't be other Geometry", func() {
 			ginkgo.It("AsPoint() has a Error", func() {
@@ -324,10 +325,10 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(SrId))
+			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has MultiPolygon Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(MultiPolygonCoordinates))
+			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.MultiPolygonCoordinates))
 		})
 		ginkgo.Describe("can't be other Geometry", func() {
 			ginkgo.It("AsPoint() has a Error", func() {
@@ -358,12 +359,12 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			gomega.Expect(nothing).To(gomega.BeNil())
 		})
 		ginkgo.Describe("without CRS", func() {
-			point := geojson.DeserializeGeometry(PointGeoJSON)
-			line := geojson.DeserializeGeometry(LineGeoJSON)
-			polygon := geojson.DeserializeGeometry(PolygonGeoJSON)
-			multiPoint := geojson.DeserializeGeometry(MultiPointGeoJSON)
-			multiLine := geojson.DeserializeGeometry(MultiLineGeoJSON)
-			multiPolygon := geojson.DeserializeGeometry(MultiPolygonGeoJSON)
+			point := geojson.DeserializeGeometry(test.PointGeoJSON)
+			line := geojson.DeserializeGeometry(test.LineGeoJSON)
+			polygon := geojson.DeserializeGeometry(test.PolygonGeoJSON)
+			multiPoint := geojson.DeserializeGeometry(test.MultiPointGeoJSON)
+			multiLine := geojson.DeserializeGeometry(test.MultiLineGeoJSON)
+			multiPolygon := geojson.DeserializeGeometry(test.MultiPolygonGeoJSON)
 			ginkgo.It("is a valid Point", func() {
 				gomega.Expect(point).ToNot(gomega.BeNil())
 				gomega.Expect(point.IsPoint()).To(gomega.BeTrue())
@@ -396,95 +397,95 @@ var _ = ginkgo.Describe("Geometry Test", func() {
 			})
 		})
 		ginkgo.Describe("with CRS", func() {
-			point := geojson.DeserializeGeometry(PointGeoJSONCrs)
-			line := geojson.DeserializeGeometry(LineGeoJSONCrs)
-			polygon := geojson.DeserializeGeometry(PolygonGeoJSONCrs)
-			multiPoint := geojson.DeserializeGeometry(MultiPointGeoJSONCrs)
-			multiLine := geojson.DeserializeGeometry(MultiLineGeoJSONCrs)
-			multiPolygon := geojson.DeserializeGeometry(MultiPolygonGeoJSONCrs)
+			point := geojson.DeserializeGeometry(test.PointGeoJSONCrs)
+			line := geojson.DeserializeGeometry(test.LineGeoJSONCrs)
+			polygon := geojson.DeserializeGeometry(test.PolygonGeoJSONCrs)
+			multiPoint := geojson.DeserializeGeometry(test.MultiPointGeoJSONCrs)
+			multiLine := geojson.DeserializeGeometry(test.MultiLineGeoJSONCrs)
+			multiPolygon := geojson.DeserializeGeometry(test.MultiPolygonGeoJSONCrs)
 			ginkgo.It("is a valid Point", func() {
 				gomega.Expect(point).ToNot(gomega.BeNil())
 				gomega.Expect(point.IsPoint()).To(gomega.BeTrue())
-				gomega.Expect(point.GetSrId()).To(gomega.Equal(SrId))
+				gomega.Expect(point.GetSrId()).To(gomega.Equal(test.SrId))
 			})
 			ginkgo.It("is a valid Line", func() {
 				gomega.Expect(line).ToNot(gomega.BeNil())
 				gomega.Expect(line.IsLine()).To(gomega.BeTrue())
-				gomega.Expect(line.GetSrId()).To(gomega.Equal(SrId))
+				gomega.Expect(line.GetSrId()).To(gomega.Equal(test.SrId))
 			})
 			ginkgo.It("is a valid Polygon", func() {
 				gomega.Expect(polygon).ToNot(gomega.BeNil())
 				gomega.Expect(polygon.IsPolygon()).To(gomega.BeTrue())
-				gomega.Expect(polygon.GetSrId()).To(gomega.Equal(SrId))
+				gomega.Expect(polygon.GetSrId()).To(gomega.Equal(test.SrId))
 			})
 			ginkgo.It("is a valid MultiPoint", func() {
 				gomega.Expect(multiPoint).ToNot(gomega.BeNil())
 				gomega.Expect(multiPoint.IsMultiPoint()).To(gomega.BeTrue())
-				gomega.Expect(multiPoint.GetSrId()).To(gomega.Equal(SrId))
+				gomega.Expect(multiPoint.GetSrId()).To(gomega.Equal(test.SrId))
 			})
 			ginkgo.It("is a valid MultiLine", func() {
 				gomega.Expect(multiLine).ToNot(gomega.BeNil())
 				gomega.Expect(multiLine.IsMultiLine()).To(gomega.BeTrue())
-				gomega.Expect(multiLine.GetSrId()).To(gomega.Equal(SrId))
+				gomega.Expect(multiLine.GetSrId()).To(gomega.Equal(test.SrId))
 			})
 			ginkgo.It("is a valid MultiPolygon", func() {
 				gomega.Expect(multiPolygon).ToNot(gomega.BeNil())
 				gomega.Expect(multiPolygon.IsMultiPolygon()).To(gomega.BeTrue())
-				gomega.Expect(multiPolygon.GetSrId()).To(gomega.Equal(SrId))
+				gomega.Expect(multiPolygon.GetSrId()).To(gomega.Equal(test.SrId))
 			})
 		})
 	})
 	ginkgo.Describe("Serialize Test", func() {
 		ginkgo.Describe("without CRS", func() {
-			point := geojson.DeserializeGeometry(PointGeoJSON).Serialize()
-			line := geojson.DeserializeGeometry(LineGeoJSON).Serialize()
-			polygon := geojson.DeserializeGeometry(PolygonGeoJSON).Serialize()
-			multiPoint := geojson.DeserializeGeometry(MultiPointGeoJSON).Serialize()
-			multiLine := geojson.DeserializeGeometry(MultiLineGeoJSON).Serialize()
-			multiPolygon := geojson.DeserializeGeometry(MultiPolygonGeoJSON).Serialize()
+			point := geojson.DeserializeGeometry(test.PointGeoJSON).Serialize()
+			line := geojson.DeserializeGeometry(test.LineGeoJSON).Serialize()
+			polygon := geojson.DeserializeGeometry(test.PolygonGeoJSON).Serialize()
+			multiPoint := geojson.DeserializeGeometry(test.MultiPointGeoJSON).Serialize()
+			multiLine := geojson.DeserializeGeometry(test.MultiLineGeoJSON).Serialize()
+			multiPolygon := geojson.DeserializeGeometry(test.MultiPolygonGeoJSON).Serialize()
 			ginkgo.It("is a valid GeoJSON Point", func() {
-				gomega.Expect(point).To(gomega.Equal(PointGeoJSON))
+				gomega.Expect(point).To(gomega.Equal(test.PointGeoJSON))
 			})
 			ginkgo.It("is a valid GeoJSON Line", func() {
-				gomega.Expect(line).To(gomega.Equal(LineGeoJSON))
+				gomega.Expect(line).To(gomega.Equal(test.LineGeoJSON))
 			})
 			ginkgo.It("is a valid GeoJSON Polygon", func() {
-				gomega.Expect(polygon).To(gomega.Equal(PolygonGeoJSON))
+				gomega.Expect(polygon).To(gomega.Equal(test.PolygonGeoJSON))
 			})
 			ginkgo.It("is a valid GeoJSON MultiPoint", func() {
-				gomega.Expect(multiPoint).To(gomega.Equal(MultiPointGeoJSON))
+				gomega.Expect(multiPoint).To(gomega.Equal(test.MultiPointGeoJSON))
 			})
 			ginkgo.It("is a valid GeoJSON MultiLine", func() {
-				gomega.Expect(multiLine).To(gomega.Equal(MultiLineGeoJSON))
+				gomega.Expect(multiLine).To(gomega.Equal(test.MultiLineGeoJSON))
 			})
 			ginkgo.It("is a valid GeoJSON MultiPolygon", func() {
-				gomega.Expect(multiPolygon).To(gomega.Equal(MultiPolygonGeoJSON))
+				gomega.Expect(multiPolygon).To(gomega.Equal(test.MultiPolygonGeoJSON))
 			})
 		})
 		ginkgo.Describe("with CRS", func() {
-			point := geojson.DeserializeGeometry(PointGeoJSONCrs).Serialize()
-			line := geojson.DeserializeGeometry(LineGeoJSONCrs).Serialize()
-			polygon := geojson.DeserializeGeometry(PolygonGeoJSONCrs).Serialize()
-			multiPoint := geojson.DeserializeGeometry(MultiPointGeoJSONCrs).Serialize()
-			multiLine := geojson.DeserializeGeometry(MultiLineGeoJSONCrs).Serialize()
-			multiPolygon := geojson.DeserializeGeometry(MultiPolygonGeoJSONCrs).Serialize()
+			point := geojson.DeserializeGeometry(test.PointGeoJSONCrs).Serialize()
+			line := geojson.DeserializeGeometry(test.LineGeoJSONCrs).Serialize()
+			polygon := geojson.DeserializeGeometry(test.PolygonGeoJSONCrs).Serialize()
+			multiPoint := geojson.DeserializeGeometry(test.MultiPointGeoJSONCrs).Serialize()
+			multiLine := geojson.DeserializeGeometry(test.MultiLineGeoJSONCrs).Serialize()
+			multiPolygon := geojson.DeserializeGeometry(test.MultiPolygonGeoJSONCrs).Serialize()
 			ginkgo.It("is a valid GeoJSON Point", func() {
-				gomega.Expect(point).To(gomega.Equal(PointGeoJSONCrs))
+				gomega.Expect(point).To(gomega.Equal(test.PointGeoJSONCrs))
 			})
 			ginkgo.It("is a valid GeoJSON Line", func() {
-				gomega.Expect(line).To(gomega.Equal(LineGeoJSONCrs))
+				gomega.Expect(line).To(gomega.Equal(test.LineGeoJSONCrs))
 			})
 			ginkgo.It("is a valid GeoJSON Polygon", func() {
-				gomega.Expect(polygon).To(gomega.Equal(PolygonGeoJSONCrs))
+				gomega.Expect(polygon).To(gomega.Equal(test.PolygonGeoJSONCrs))
 			})
 			ginkgo.It("is a valid GeoJSON MultiPoint", func() {
-				gomega.Expect(multiPoint).To(gomega.Equal(MultiPointGeoJSONCrs))
+				gomega.Expect(multiPoint).To(gomega.Equal(test.MultiPointGeoJSONCrs))
 			})
 			ginkgo.It("is a valid GeoJSON MultiLine", func() {
-				gomega.Expect(multiLine).To(gomega.Equal(MultiLineGeoJSONCrs))
+				gomega.Expect(multiLine).To(gomega.Equal(test.MultiLineGeoJSONCrs))
 			})
 			ginkgo.It("is a valid GeoJSON MultiPolygon", func() {
-				gomega.Expect(multiPolygon).To(gomega.Equal(MultiPolygonGeoJSONCrs))
+				gomega.Expect(multiPolygon).To(gomega.Equal(test.MultiPolygonGeoJSONCrs))
 			})
 		})
 	})
