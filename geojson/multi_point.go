@@ -1,14 +1,28 @@
 package geojson
 
 // a Multi Point Geometry
-type MultiPoint struct {
-	// the Coordinates of the Multi Point
+type IMultiPoint interface {
+	IGeometryConvertible
+	ISrIdReadProperty
+	GetCoordinates() [][]float64
+}
+
+type multiPoint struct {
 	Coordinates [][]float64
-	// the EPSG Code
-	SrId int
+	SrId        int
+}
+
+// the EPSG Code
+func (mp *multiPoint) GetSrId() int {
+	return mp.SrId
+}
+
+// the Coordinates of the Multi Point
+func (mp *multiPoint) GetCoordinates() [][]float64 {
+	return mp.Coordinates
 }
 
 // convert the Multi Line into a Geometry
-func (mp *MultiPoint) ToGeometry() *Geometry {
+func (mp *multiPoint) ToGeometry() IGeometry {
 	return NewGeometry(MultiPointType, mp.Coordinates, mp.SrId)
 }

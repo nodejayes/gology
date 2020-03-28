@@ -1,16 +1,27 @@
 package geojson
 
-// a Struct that have a Coordinate Reference System with a EPSG Code
-type ILocatable interface {
-	GetSrId() int
+type INameReadProperty interface {
+	GetName() string
 }
 
-// a Struct that can be Converted into a Geometry struct
-type IGeometryConvertible interface {
-	ToGeometry() *Geometry
+type ITypeReadProperty interface {
+	GetType() string
+}
+
+type ISrIdReadProperty interface {
+	GetSrId() int
 }
 
 // a Struct that can be serialize into a string
 type ISerializable interface {
 	Serialize() string
+}
+
+type IReferenceSystemReadProperty interface {
+	GetCRS() IReferenceSystem
+}
+
+// a Struct that can be Converted into a Geometry struct
+type IGeometryConvertible interface {
+	ToGeometry() IGeometry
 }
