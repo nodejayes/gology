@@ -14,25 +14,31 @@ var _ = ginkgo.Describe("Line Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
+			gomega.Expect(geom.GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Line Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.LineCoordinates))
+			gomega.Expect(geom.GetCoordinates()).To(gomega.Equal(test.LineCoordinates))
 		})
 	})
 	ginkgo.Describe("ToGeometry()", func() {
-		l, err := geojson.DeserializeGeometry(test.LineGeoJSONCrs).AsLine()
+		tmp, deserializeErr := geojson.DeserializeGeometry(test.LineGeoJSONCrs)
+		ginkgo.It("deserialize successfully", func() {
+			gomega.Expect(deserializeErr).To(gomega.BeNil())
+		})
+		l, err := tmp.AsLine()
 		ginkgo.It("has no Error", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has Line Type", func() {
-			gomega.Expect(l.ToGeometry().Type).To(gomega.Equal(geojson.LineType))
+			gomega.Expect(l.ToGeometry().GetType()).To(gomega.Equal(geojson.LineType))
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(l.ToGeometry().GetSrId()).To(gomega.Equal(test.SrId))
+			gomega.Expect(l.ToGeometry().GetCRS().GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Line Coordinates", func() {
-			gomega.Expect(l.ToGeometry().Coordinates).To(gomega.Equal(test.LineCoordinates))
+			coords, err := l.ToGeometry().GetCoordinates().AsLine()
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(coords).To(gomega.Equal(test.LineCoordinates))
 		})
 	})
 })

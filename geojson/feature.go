@@ -14,6 +14,7 @@ const (
 	FeatureCollectionType FeatureTypes = "FeatureCollection"
 )
 
+// a Geometry with some Properties
 type IFeature interface {
 	GetType() FeatureTypes
 	GetGeometry() IGeometry
@@ -21,30 +22,34 @@ type IFeature interface {
 	Serialize() string
 }
 
-// a Geometry with some Properties
 type feature struct {
-	// the GeoJSON Feature Type
-	Type FeatureTypes `json:"type"`
-	// the Geometry
-	Geometry IGeometry `json:"geometry"`
-	// the Properties of the Geometry Object
+	Type       FeatureTypes            `json:"type"`
+	Geometry   *geometry               `json:"geometry"`
 	Properties *map[string]interface{} `json:"properties"`
 }
 
 // create a new Feature from a Geometry and some Properties you can pass nil when the Geometry has no Properties
 // if so a empty Hash Map was created
-func NewFeature(geometry IGeometry, properties *map[string]interface{}) IFeature {
+func NewFeature(geom IGeometry, properties *map[string]interface{}) IFeature {
+	g := &geometry{
+		Type:        geom.GetType(),
+		Coordinates: geom.GetCoordinates(),
+		CRS: &referenceSystem{
+			Type:       geom.GetCRS().GetType(),
+			Properties: newReferenceSystemProperties(geom.GetCRS().GetSrId()),
+		},
+	}
 	if properties == nil {
 		emptyProperties := make(map[string]interface{})
 		return &feature{
 			Type:       FeatureType,
-			Geometry:   geometry,
+			Geometry:   g,
 			Properties: &emptyProperties,
 		}
 	}
 	return &feature{
 		Type:       FeatureType,
-		Geometry:   geometry,
+		Geometry:   g,
 		Properties: properties,
 	}
 }

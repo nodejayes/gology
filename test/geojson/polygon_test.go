@@ -14,25 +14,31 @@ var _ = ginkgo.Describe("Polygon Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
+			gomega.Expect(geom.GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Polygon Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.PolygonCoordinates))
+			gomega.Expect(geom.GetCoordinates()).To(gomega.Equal(test.PolygonCoordinates))
 		})
 	})
 	ginkgo.Describe("ToGeometry()", func() {
-		l, err := geojson.DeserializeGeometry(test.PolygonGeoJSONCrs).AsPolygon()
+		tmp, deserializeErr := geojson.DeserializeGeometry(test.PolygonGeoJSONCrs)
+		ginkgo.It("deserialize successfully", func() {
+			gomega.Expect(deserializeErr).To(gomega.BeNil())
+		})
+		l, err := tmp.AsPolygon()
 		ginkgo.It("has no Error", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has Polygon Type", func() {
-			gomega.Expect(l.ToGeometry().Type).To(gomega.Equal(geojson.PolygonType))
+			gomega.Expect(l.ToGeometry().GetType()).To(gomega.Equal(geojson.PolygonType))
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(l.ToGeometry().GetSrId()).To(gomega.Equal(test.SrId))
+			gomega.Expect(l.ToGeometry().GetCRS().GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Polygon Coordinates", func() {
-			gomega.Expect(l.ToGeometry().Coordinates).To(gomega.Equal(test.PolygonCoordinates))
+			coords, err := l.ToGeometry().GetCoordinates().AsPolygon()
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(coords).To(gomega.Equal(test.PolygonCoordinates))
 		})
 	})
 })

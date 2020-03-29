@@ -14,25 +14,31 @@ var _ = ginkgo.Describe("Point Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("SrId was set", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
+			gomega.Expect(geom.GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("Coordinates was set", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.PointCoordinates))
+			gomega.Expect(geom.GetCoordinates()).To(gomega.Equal(test.PointCoordinates))
 		})
 	})
 	ginkgo.Describe("ToGeometry()", func() {
-		pt, err := geojson.DeserializeGeometry(test.PointGeoJSONCrs).AsPoint()
+		tmp, deserializeErr := geojson.DeserializeGeometry(test.PointGeoJSONCrs)
+		ginkgo.It("deserialize successfully", func() {
+			gomega.Expect(deserializeErr).To(gomega.BeNil())
+		})
+		pt, err := tmp.AsPoint()
 		ginkgo.It("has no Error", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has Point Type", func() {
-			gomega.Expect(pt.ToGeometry().Type).To(gomega.Equal(geojson.PointType))
+			gomega.Expect(pt.ToGeometry().GetType()).To(gomega.Equal(geojson.PointType))
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(pt.ToGeometry().GetSrId()).To(gomega.Equal(test.SrId))
+			gomega.Expect(pt.ToGeometry().GetCRS().GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has Point Coordinates", func() {
-			gomega.Expect(pt.ToGeometry().Coordinates).To(gomega.Equal(test.PointCoordinates))
+			coords, err := pt.ToGeometry().GetCoordinates().AsPoint()
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(coords).To(gomega.Equal(test.PointCoordinates))
 		})
 	})
 })

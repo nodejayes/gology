@@ -17,7 +17,10 @@ type referenceSystemProperties struct {
 	Name string `json:"name"`
 }
 
-func newReferenceSystemProperties(srId int) IReferenceSystemProperties {
+func newReferenceSystemProperties(srId int) *referenceSystemProperties {
+	if srId < 1 {
+		srId = 0
+	}
 	return &referenceSystemProperties{
 		Name: fmt.Sprintf("EPSG:%v", srId),
 	}
@@ -40,15 +43,19 @@ type IReferenceSystem interface {
 
 type referenceSystem struct {
 	Type       string                     `json:"type"`
-	Properties IReferenceSystemProperties `json:"properties"`
+	Properties *referenceSystemProperties `json:"properties"`
 }
 
-// create a new Reference System from EPSG Code
-func NewReferenceSystem(srId int) IReferenceSystem {
+func newReferenceSystem(srId int) *referenceSystem {
 	return &referenceSystem{
 		Type:       "name",
 		Properties: newReferenceSystemProperties(srId),
 	}
+}
+
+// create a new Reference System from EPSG Code
+func NewReferenceSystem(srId int) IReferenceSystem {
+	return newReferenceSystem(srId)
 }
 
 func (rf *referenceSystem) GetType() string {

@@ -14,25 +14,31 @@ var _ = ginkgo.Describe("MultiPoint Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
+			gomega.Expect(geom.GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has MultiPoint Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.MultiPointCoordinates))
+			gomega.Expect(geom.GetCoordinates()).To(gomega.Equal(test.MultiPointCoordinates))
 		})
 	})
 	ginkgo.Describe("ToGeometry()", func() {
-		l, err := geojson.DeserializeGeometry(test.MultiPointGeoJSONCrs).AsMultiPoint()
+		tmp, deserializeErr := geojson.DeserializeGeometry(test.MultiPointGeoJSONCrs)
+		ginkgo.It("deserialize successfully", func() {
+			gomega.Expect(deserializeErr).To(gomega.BeNil())
+		})
+		l, err := tmp.AsMultiPoint()
 		ginkgo.It("has no Error", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has MultiPoint Type", func() {
-			gomega.Expect(l.ToGeometry().Type).To(gomega.Equal(geojson.MultiPointType))
+			gomega.Expect(l.ToGeometry().GetType()).To(gomega.Equal(geojson.MultiPointType))
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(l.ToGeometry().GetSrId()).To(gomega.Equal(test.SrId))
+			gomega.Expect(l.ToGeometry().GetCRS().GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has MultiPoint Coordinates", func() {
-			gomega.Expect(l.ToGeometry().Coordinates).To(gomega.Equal(test.MultiPointCoordinates))
+			coords, err := l.ToGeometry().GetCoordinates().AsMultiPoint()
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(coords).To(gomega.Equal(test.MultiPointCoordinates))
 		})
 	})
 })

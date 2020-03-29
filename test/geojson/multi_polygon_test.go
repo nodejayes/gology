@@ -14,27 +14,31 @@ var _ = ginkgo.Describe("MultiPolygon Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(geom.SrId).To(gomega.Equal(test.SrId))
+			gomega.Expect(geom.GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has MultiPolygon Coordinates", func() {
-			gomega.Expect(geom.Coordinates).To(gomega.Equal(test.MultiPolygonCoordinates))
+			gomega.Expect(geom.GetCoordinates()).To(gomega.Equal(test.MultiPolygonCoordinates))
 		})
 	})
 	ginkgo.Describe("ToGeometry()", func() {
-		l, err := geojson.DeserializeGeometry(test.MultiPolygonGeoJSONCrs).AsMultiPolygon()
+		tmp, deserializeErr := geojson.DeserializeGeometry(test.MultiPolygonGeoJSONCrs)
+		ginkgo.It("deserialize successfully", func() {
+			gomega.Expect(deserializeErr).To(gomega.BeNil())
+		})
+		l, err := tmp.AsMultiPolygon()
 		ginkgo.It("has no Error", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 		})
 		ginkgo.It("has MultiPolygon Type", func() {
-			gomega.Expect(l.ToGeometry().Type).To(gomega.Equal(geojson.MultiPolygonType))
+			gomega.Expect(l.ToGeometry().GetType()).To(gomega.Equal(geojson.MultiPolygonType))
 		})
 		ginkgo.It("has SrId", func() {
-			gomega.Expect(l.ToGeometry().GetSrId()).To(gomega.Equal(test.SrId))
+			gomega.Expect(l.ToGeometry().GetCRS().GetSrId()).To(gomega.Equal(test.SrId))
 		})
 		ginkgo.It("has MultiPolygon Coordinates", func() {
-			t := l.ToGeometry().Coordinates
-			println(t)
-			gomega.Expect(t).To(gomega.Equal(test.MultiPolygonCoordinates))
+			coords, err := l.ToGeometry().GetCoordinates().AsMultiPolygon()
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(coords).To(gomega.Equal(test.MultiPolygonCoordinates))
 		})
 	})
 })

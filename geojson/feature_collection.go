@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 )
 
+// a Collection of Features
 type IFeatureCollection interface {
 	GetType() FeatureTypes
 	GetFeatures() []IFeature
@@ -12,14 +13,10 @@ type IFeatureCollection interface {
 	Serialize() string
 }
 
-// a Collection of Features
 type featureCollection struct {
-	// the GeoJSON FeatureCollection Type
-	Type FeatureTypes `json:"type"`
-	// the List of Features
-	Features []IFeature `json:"features"`
-	// a optional Coordinate Reference System for all Features
-	CRS IReferenceSystem `json:"crs,omitempty"`
+	Type     FeatureTypes     `json:"type"`
+	Features []*feature       `json:"features"`
+	CRS      *referenceSystem `json:"crs,omitempty"`
 }
 
 // get the GeoJSON Type of the FeatureCollection
@@ -29,7 +26,11 @@ func (fc *featureCollection) GetType() FeatureTypes {
 
 // get the Feature List of the Feature Collection
 func (fc *featureCollection) GetFeatures() []IFeature {
-	return fc.Features
+	var res []IFeature
+	for _, f := range fc.Features {
+		res = append(res, f)
+	}
+	return res
 }
 
 // get the ReferenceSystem of the Feature Collection
@@ -49,10 +50,28 @@ func NewFeatureCollection(features []IFeature) IFeatureCollection {
 			break
 		}
 	}
+	var feats []*feature
+	for _, f := range features {
+		feats = append(feats, &feature{
+			Type: f.GetType(),
+			Geometry: &geometry{
+				Type:        f.GetGeometry().GetType(),
+				Coordinates: f.GetGeometry().GetCoordinates(),
+				CRS: &referenceSystem{
+					Type:       f.GetGeometry().GetCRS().GetType(),
+					Properties: newReferenceSystemProperties(f.GetGeometry().GetCRS().GetSrId()),
+				},
+			},
+			Properties: f.GetProperties(),
+		})
+	}
 	return &featureCollection{
 		Type:     FeatureCollectionType,
-		Features: features,
-		CRS:      NewReferenceSystem(srId),
+		Features: feats,
+		CRS: &referenceSystem{
+			Type:       "name",
+			Properties: newReferenceSystemProperties(srId),
+		},
 	}
 }
 

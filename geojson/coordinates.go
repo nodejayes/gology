@@ -22,49 +22,109 @@ func NewCoordinate(coords interface{}) ICoordinate {
 }
 
 func (c coordinate) AsPoint() ([]float64, error) {
-	res, ok := c.Data.([]float64)
-	if !ok {
-		return nil, WrongCoordinateTypeError
+	switch res := c.Data.(type) {
+	case []float64:
+		return res, nil
+	case *[]float64:
+		return *res, nil
+	case *coordinate:
+		return res.AsPoint()
+	case coordinate:
+		return res.AsPoint()
+	case []interface{}:
+		return forceFloat64Array1D(res), nil
+	case *[]interface{}:
+		return forceFloat64Array1D(*res), nil
 	}
-	return res, nil
+	return nil, WrongCoordinateTypeError
 }
 
 func (c coordinate) AsLine() ([][]float64, error) {
-	res, ok := c.Data.([][]float64)
-	if !ok {
-		return nil, WrongCoordinateTypeError
+	switch res := c.Data.(type) {
+	case [][]float64:
+		return res, nil
+	case *[][]float64:
+		return *res, nil
+	case *coordinate:
+		return res.AsLine()
+	case coordinate:
+		return res.AsLine()
+	case []interface{}:
+		return forceFloat64Array2D(res), nil
+	case *[]interface{}:
+		return forceFloat64Array2D(*res), nil
 	}
-	return res, nil
+	return nil, WrongCoordinateTypeError
 }
 
 func (c coordinate) AsPolygon() ([][][]float64, error) {
-	res, ok := c.Data.([][][]float64)
-	if !ok {
-		return nil, WrongCoordinateTypeError
+	switch res := c.Data.(type) {
+	case [][][]float64:
+		return res, nil
+	case *[][][]float64:
+		return *res, nil
+	case *coordinate:
+		return res.AsPolygon()
+	case coordinate:
+		return res.AsPolygon()
+	case []interface{}:
+		return forceFloat64Array3D(res), nil
+	case *[]interface{}:
+		return forceFloat64Array3D(*res), nil
 	}
-	return res, nil
+	return nil, WrongCoordinateTypeError
 }
 
 func (c coordinate) AsMultiPoint() ([][]float64, error) {
-	res, ok := c.Data.([][]float64)
-	if !ok {
-		return nil, WrongCoordinateTypeError
+	switch res := c.Data.(type) {
+	case [][]float64:
+		return res, nil
+	case *[][]float64:
+		return *res, nil
+	case *coordinate:
+		return res.AsMultiPoint()
+	case coordinate:
+		return res.AsMultiPoint()
+	case []interface{}:
+		return forceFloat64Array2D(res), nil
+	case *[]interface{}:
+		return forceFloat64Array2D(*res), nil
 	}
-	return res, nil
+	return nil, WrongCoordinateTypeError
 }
 
 func (c coordinate) AsMultiLine() ([][][]float64, error) {
-	res, ok := c.Data.([][][]float64)
-	if !ok {
-		return nil, WrongCoordinateTypeError
+	switch res := c.Data.(type) {
+	case [][][]float64:
+		return res, nil
+	case *[][][]float64:
+		return *res, nil
+	case *coordinate:
+		return res.AsMultiLine()
+	case coordinate:
+		return res.AsMultiLine()
+	case []interface{}:
+		return forceFloat64Array3D(res), nil
+	case *[]interface{}:
+		return forceFloat64Array3D(*res), nil
 	}
-	return res, nil
+	return nil, WrongCoordinateTypeError
 }
 
 func (c coordinate) AsMultiPolygon() ([][][][]float64, error) {
-	res, ok := c.Data.([][][][]float64)
-	if !ok {
-		return nil, WrongCoordinateTypeError
+	switch res := c.Data.(type) {
+	case [][][][]float64:
+		return res, nil
+	case *[][][][]float64:
+		return *res, nil
+	case *coordinate:
+		return res.AsMultiPolygon()
+	case coordinate:
+		return res.AsMultiPolygon()
+	case []interface{}:
+		return forceFloat64Array4D(res), nil
+	case *[]interface{}:
+		return forceFloat64Array4D(*res), nil
 	}
-	return res, nil
+	return nil, WrongCoordinateTypeError
 }
