@@ -51,9 +51,11 @@ var _ = ginkgo.Describe("FeatureCollection Test", func() {
 		})
 	})
 	ginkgo.Describe("Deserialize()", func() {
-		featureCollection := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSON)
-		featureCollectionCrs := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSONCrs)
+		featureCollection, fcErr := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSON)
+		featureCollectionCrs, fcCrsErr := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSONCrs)
 		ginkgo.It("has Feature Type", func() {
+			gomega.Expect(fcErr).To(gomega.BeNil())
+			gomega.Expect(fcCrsErr).To(gomega.BeNil())
 			gomega.Expect(featureCollection.GetType()).To(gomega.Equal(geojson.FeatureCollectionType))
 			gomega.Expect(featureCollectionCrs.GetType()).To(gomega.Equal(geojson.FeatureCollectionType))
 		})
@@ -76,11 +78,18 @@ var _ = ginkgo.Describe("FeatureCollection Test", func() {
 		ginkgo.It("has SrId", func() {
 			gomega.Expect(featureCollectionCrs.GetFeatures()[0].GetGeometry().GetCRS().GetSrId()).To(gomega.Equal(test.SrId))
 		})
+		ginkgo.It("deserialize Array of FeatureCollections", func() {
+			value, err := geojson.DeserializeFeatureCollectionList(test.FeatureCollectionGeoJSONArray)
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(len(value)).To(gomega.Equal(1))
+		})
 	})
 	ginkgo.Describe("Serialize()", func() {
-		featureCollection := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSON)
-		featureCollectionCrs := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSONCrs)
+		featureCollection, fcErr := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSON)
+		featureCollectionCrs, fcCrsErr := geojson.DeserializeFeatureCollection(test.FeatureCollectionGeoJSONCrs)
 		ginkgo.It("is Valid GeoJSON FeatureCollection", func() {
+			gomega.Expect(fcErr).To(gomega.BeNil())
+			gomega.Expect(fcCrsErr).To(gomega.BeNil())
 			gomega.Expect(featureCollection.Serialize()).To(gomega.Equal(test.FeatureCollectionGeoJSON))
 			gomega.Expect(featureCollectionCrs.Serialize()).To(gomega.Equal(test.FeatureCollectionGeoJSONCrs))
 		})

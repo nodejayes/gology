@@ -90,11 +90,24 @@ func (fc *featureCollection) Serialize() string {
 }
 
 // Deserialize a GeoJSON String into a Feature Collection if the String is invalid nil was returned
-func DeserializeFeatureCollection(input string) IFeatureCollection {
+func DeserializeFeatureCollection(input string) (IFeatureCollection, error) {
 	var res *featureCollection
 	err := json.Unmarshal([]byte(input), &res)
 	if err != nil {
-		return nil
+		return nil, err
 	}
-	return res
+	return res, nil
+}
+
+func DeserializeFeatureCollectionList(input string) ([]IFeatureCollection, error) {
+	var tmp []*featureCollection
+	err := json.Unmarshal([]byte(input), &tmp)
+	if err != nil {
+		return nil, err
+	}
+	var res []IFeatureCollection
+	for _, fc := range tmp {
+		res = append(res, fc)
+	}
+	return res, nil
 }

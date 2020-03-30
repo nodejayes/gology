@@ -19,6 +19,11 @@ var _ = ginkgo.Describe("Point Test", func() {
 		ginkgo.It("Coordinates was set", func() {
 			gomega.Expect(geom.GetCoordinates()).To(gomega.Equal(test.PointCoordinates))
 		})
+		ginkgo.It("deserialize point array", func() {
+			value, err := geojson.DeserializeGeometryList(test.PointGeoJSONArray)
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(len(value)).To(gomega.Equal(1))
+		})
 	})
 	ginkgo.Describe("ToGeometry()", func() {
 		tmp, deserializeErr := geojson.DeserializeGeometry(test.PointGeoJSONCrs)

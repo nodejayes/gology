@@ -40,5 +40,10 @@ var _ = ginkgo.Describe("MultiLine Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 			gomega.Expect(coords).To(gomega.Equal(test.MultiLineCoordinates))
 		})
+		ginkgo.It("deserialize multi line array", func() {
+			value, err := geojson.DeserializeGeometryList(test.MultiLineGeoJSONArray)
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(len(value)).To(gomega.Equal(1))
+		})
 	})
 })

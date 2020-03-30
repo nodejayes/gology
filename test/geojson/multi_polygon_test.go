@@ -40,5 +40,10 @@ var _ = ginkgo.Describe("MultiPolygon Test", func() {
 			gomega.Expect(err).To(gomega.BeNil())
 			gomega.Expect(coords).To(gomega.Equal(test.MultiPolygonCoordinates))
 		})
+		ginkgo.It("deserialize multi polygon array", func() {
+			value, err := geojson.DeserializeGeometryList(test.MultiPolygonGeoJSONArray)
+			gomega.Expect(err).To(gomega.BeNil())
+			gomega.Expect(len(value)).To(gomega.Equal(1))
+		})
 	})
 })

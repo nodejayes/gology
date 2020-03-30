@@ -55,17 +55,30 @@ func NewFeature(geom IGeometry, properties *map[string]interface{}) IFeature {
 }
 
 // Deserialize a GeoJSON String into a Feature if a invalid GeoJSON String was given nil was returned
-func DeserializeFeature(input string) IFeature {
+func DeserializeFeature(input string) (IFeature, error) {
 	var res *feature
 	err := json.Unmarshal([]byte(input), &res)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	if res.Properties == nil {
 		emptyProps := make(map[string]interface{})
 		res.Properties = &emptyProps
 	}
-	return res
+	return res, nil
+}
+
+func DeserializeFeatureList(input string) ([]IFeature, error) {
+	var tmp []*feature
+	err := json.Unmarshal([]byte(input), &tmp)
+	if err != nil {
+		return nil, err
+	}
+	var res []IFeature
+	for _, f := range tmp {
+		res = append(res, f)
+	}
+	return res, nil
 }
 
 // get the GeoJSON Type of the Feature

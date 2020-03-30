@@ -126,6 +126,23 @@ func DeserializeGeometry(str string) (IGeometry, error) {
 	return NewGeometry(geom.Type, geom.Coordinates, geom.CRS.GetSrId()), nil
 }
 
+func DeserializeGeometryList(input string) ([]IGeometry, error) {
+	var tmp []*geometry
+	err := json.Unmarshal([]byte(input), &tmp)
+	if err != nil {
+		return nil, err
+	}
+	var res []IGeometry
+	for _, g := range tmp {
+		if g.CRS == nil {
+			res = append(res, NewGeometry(g.Type, g.Coordinates, 0))
+			continue
+		}
+		res = append(res, NewGeometry(g.Type, g.Coordinates, g.CRS.GetSrId()))
+	}
+	return res, nil
+}
+
 // get the Type of the Geometry
 func (g *geometry) GetType() GeometryTypes {
 	return g.Type
